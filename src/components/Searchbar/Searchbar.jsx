@@ -8,7 +8,10 @@ import { ImSearch } from 'react-icons/im';
 export function Searchbar({ onSubmit }) {
   const [filter, setFilter] = useState('');
 
-  const handleFilterChange = event => setFilter(event.currentTarget.value);
+  const handleFilterChange = event => {
+    event.preventDefault();
+    setFilter(event.currentTarget.value);
+  }
 
   const handleSubmit = event => {
     event.preventDefault();

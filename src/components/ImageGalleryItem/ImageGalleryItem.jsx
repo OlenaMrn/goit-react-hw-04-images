@@ -9,7 +9,7 @@ export function ImageGalleryItem({ url, tags, onClick }) {
           className={styles.imgGallery}
           src={url}
           alt={tags}
-          onClick={() => onClick(url)}
+          // onClick={() => onClick(url)}
         />
       </li>
     </>
@@ -19,7 +19,7 @@ export function ImageGalleryItem({ url, tags, onClick }) {
 ImageGalleryItem.propTypes = {
   url: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  // onClick: PropTypes.func.isRequired,
 };
 
 
