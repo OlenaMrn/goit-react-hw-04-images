@@ -25,16 +25,16 @@ export function ImageGallery({ filter }) {
   const [totalPages, setTotalPages] = useState(0);
   const [status, setStatus] = useState('idle');
   const [isLoading, setIsLoading] = useState(false);
-   const [firstRecivedImage, setFirstRecivedImage] = useState(null);
+   const [firstRecievedImage, setFirstRecievedImage] = useState(null);
   const perPage = 12;
 
 
   useEffect(() => {
-    document.getElementById(firstRecivedImage)?.scrollIntoView({
+    document.getElementById(firstRecievedImage)?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
-  }, [firstRecivedImage]);
+  }, [firstRecievedImage]);
 
   useEffect(() => {
     setImages([]);
@@ -50,7 +50,7 @@ export function ImageGallery({ filter }) {
        
         setImages(responseImages.hits);
         setTotalPages(Math.ceil(responseImages.totalHits / perPage));
-        setFirstRecivedImage(responseImages.hits[0].id);
+        setFirstRecievedImage(responseImages.hits[0].id);
         setStatus('resolved');
       })
       .catch(error => {
