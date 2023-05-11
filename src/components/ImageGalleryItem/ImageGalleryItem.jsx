@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './ImageGalleryItem.module.css';
 import { Modal } from 'components/Modal/Modal';
 
-export const ImageGalleryItem = ({ url, tags, onClick }) => {
+export const ImageGalleryItem = ({ url, tags }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -34,5 +34,5 @@ export const ImageGalleryItem = ({ url, tags, onClick }) => {
 ImageGalleryItem.propTypes = {
   url: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  
 };

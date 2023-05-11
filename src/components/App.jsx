@@ -8,6 +8,7 @@ export function App() {
   const [filter, setFilter] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [modalImg, setModalImg] = useState('');
+ 
 
   const handleSearchSubmit = filter => {
     setFilter(filter);

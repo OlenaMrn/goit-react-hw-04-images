@@ -25,9 +25,8 @@ export function ImageGallery({ filter }) {
   const [totalPages, setTotalPages] = useState(0);
   const [status, setStatus] = useState('idle');
   const [isLoading, setIsLoading] = useState(false);
-   const [firstRecievedImage, setFirstRecievedImage] = useState(null);
+  const [firstRecievedImage, setFirstRecievedImage] = useState(null);
   const perPage = 12;
-
 
   useEffect(() => {
     document.getElementById(firstRecievedImage)?.scrollIntoView({
@@ -37,20 +36,28 @@ export function ImageGallery({ filter }) {
   }, [firstRecievedImage]);
 
   useEffect(() => {
+    if (!filter) {
+      setImages([]);
+      setPage(1);
+      setTotalPages(0);
+      setStatus('idle');
+      return;
+    }
+
     setImages([]);
     setPage(1);
     setTotalPages(0);
     setStatus('pending');
     setIsLoading(true);
 
-   
-
     fetchImage(filter, 1, perPage)
       .then(responseImages => {
-       
-        setImages(responseImages.hits);
+        const hits = responseImages.hits;
+        if (hits.length > 0) {
+          setFirstRecievedImage(hits[0].id);
+        }
+        setImages(hits);
         setTotalPages(Math.ceil(responseImages.totalHits / perPage));
-        setFirstRecievedImage(responseImages.hits[0].id);
         setStatus('resolved');
       })
       .catch(error => {
@@ -58,6 +65,7 @@ export function ImageGallery({ filter }) {
         console.error(error);
       })
       .finally(() => setIsLoading(false));
+
   }, [filter]);
 
   const clickOnLoadMore = () => {
@@ -129,7 +137,3 @@ export function ImageGallery({ filter }) {
 ImageGallery.propTypes = {
   filter: PropTypes.string.isRequired,
 };
-
-
-
-
