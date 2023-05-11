@@ -1,56 +1,41 @@
-import { Component } from 'react';
+import React, { useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Modal } from './Modal/Modal';
 
-export class App extends Component {
-  state = {
-    imagelist: [],
-    page: 1,
-    filter: '',
-    loading: false,
-    showModal: false,
-    modalImg: '',
+export function App() {
+  const [filter, setFilter] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [modalImg, setModalImg] = useState('');
+
+  const handleSearchSubmit = filter => {
+    setFilter(filter);
   };
 
-  handleSearchSubmit = filter => {
-    this.setState({ filter });
+  const handleChange = e => {
+    setFilter(e.target.value);
   };
 
-  handleChange = e => {
-    this.setState({ filter: e.target.value });
+  const toggleModal = largeImageURL => {
+    setShowModal(prevShowModal => !prevShowModal);
+    setModalImg(largeImageURL);
   };
 
-  toggleModal = largeImageURL => {
-    this.setState(prevState => ({
-      showModal: !prevState.showModal,
-      modalImg: largeImageURL,
-    }));
-  };
-
-  render() {
-    const { filter, imagelist, showModal, modalImg } = this.state;
-
-    return (
-      <div>
-        <header>
-          <Searchbar
-            value={filter}
-            onSubmit={this.handleSearchSubmit}
-            onChange={this.handleChange}
-          />
-        </header>
-        <main>
-          <ImageGallery
-            filter={filter}
-            images={imagelist}
-            onClick={this.toggleModal}
-          />
-          {showModal && <Modal onClose={this.toggleModal} url={modalImg} />}
-        </main>
-        <ToastContainer />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <header>
+        <Searchbar
+          value={filter}
+          onSubmit={handleSearchSubmit}
+          onChange={handleChange}
+        />
+      </header>
+      <main>
+        <ImageGallery filter={filter} onClick={toggleModal} />
+        {showModal && <Modal onClose={toggleModal} url={modalImg} />}
+      </main>
+      <ToastContainer />
+    </div>
+  );
 }

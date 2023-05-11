@@ -107,8 +107,13 @@ export function ImageGallery({ filter }) {
       <div>
         <div>{isLoading && <BlocksLoader />}</div>
         <ul className={styles.ImageGallery}>
-          {images.map(({ id, largeImageURL, tags }) => (
-            <ImageGalleryItem key={id} url={largeImageURL} tags={tags} />
+          {images.map(({ id, largeImageURL, tags, webformatURL }) => (
+            <ImageGalleryItem
+              key={id}
+              webformatURL={webformatURL}
+              url={largeImageURL}
+              tags={tags}
+            />
           ))}
         </ul>
         {images.length !== 0 && page !== totalPages && (
