@@ -65,7 +65,6 @@ export function ImageGallery({ filter }) {
         console.error(error);
       })
       .finally(() => setIsLoading(false));
-
   }, [filter]);
 
   const clickOnLoadMore = () => {
@@ -114,16 +113,26 @@ export function ImageGallery({ filter }) {
     return (
       <div>
         <div>{isLoading && <BlocksLoader />}</div>
-        <ul className={styles.ImageGallery}>
-          {images.map(({ id, largeImageURL, tags, webformatURL }) => (
-            <ImageGalleryItem
-              key={id}
-              webformatURL={webformatURL}
-              url={largeImageURL}
-              tags={tags}
+        {images.length > 0 ? (
+          <ul className={styles.ImageGallery}>
+            {images.map(({ id, largeImageURL, tags, webformatURL }) => (
+              <ImageGalleryItem
+                key={id}
+                webformatURL={webformatURL}
+                url={largeImageURL}
+                tags={tags}
+              />
+            ))}
+          </ul>
+        ) : (
+          <div className={styles.wrap}>
+            <img
+              className={styles.imageError}
+              src="https://rs.ui.ac.id/umum/files/promosi/20220325112709-1.jpeg"
+              alt="404"
             />
-          ))}
-        </ul>
+          </div>
+        )}
         {images.length !== 0 && page !== totalPages && (
           <Button onClick={clickOnLoadMore} />
         )}
