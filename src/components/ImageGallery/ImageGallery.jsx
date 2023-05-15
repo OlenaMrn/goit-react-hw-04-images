@@ -10,7 +10,7 @@ const BASE_URL = 'https://pixabay.com/api/';
 
 function fetchImage(filter, page, perPage) {
   return fetch(
-    `${BASE_URL}/?q=${filter}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${perPage}`
+    `${BASE_URL}?q=${filter}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${perPage}`
   ).then(res => {
     if (res.ok) {
       return res.json();
@@ -25,65 +25,52 @@ export function ImageGallery({ filter }) {
   const [totalPages, setTotalPages] = useState(0);
   const [status, setStatus] = useState('idle');
   const [isLoading, setIsLoading] = useState(false);
-  const [firstRecievedImage, setFirstRecievedImage] = useState(null);
   const perPage = 12;
 
-  useEffect(() => {
-    document.getElementById(firstRecievedImage)?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-  }, [firstRecievedImage]);
+  
 
   useEffect(() => {
-    if (!filter) {
-      setImages([]);
-      setPage(1);
-      setTotalPages(0);
-      setStatus('idle');
-      return;
-    }
-
     setImages([]);
-    setPage(1);
     setTotalPages(0);
+    setPage(1);
+  }, [filter]);
+
+  
+
+  useEffect(() => {
+    if (filter === '') return;
     setStatus('pending');
     setIsLoading(true);
-
-    fetchImage(filter, 1, perPage)
-      .then(responseImages => {
-        const hits = responseImages.hits;
-        if (hits.length > 0) {
-          setFirstRecievedImage(hits[0].id);
+    fetchImage(filter, page, perPage)
+      .then(res => {
+        if (!res.total) return [];
+        setTotalPages(Math.ceil(res.total / perPage));
+        return res.hits.map(({ id, webformatURL, largeImageURL, tags }) => ({
+          id,
+          webformatURL,
+          largeImageURL,
+          tags,
+        }));
+      })
+      .then(res => {
+        if (page !== 1) {
+          setImages(prev => [...prev, ...res]);
+        } else {
+          setImages(res);
         }
-        setImages(hits);
-        setTotalPages(Math.ceil(responseImages.totalHits / perPage));
         setStatus('resolved');
+        setIsLoading(false);
       })
       .catch(error => {
         setStatus('rejected');
-        console.error(error);
-      })
-      .finally(() => setIsLoading(false));
-  }, [filter]);
+        setIsLoading(false);
+      });
+  }, [filter, page]);
+
 
   const clickOnLoadMore = () => {
     setPage(prevPage => prevPage + 1);
   };
-
-  useEffect(() => {
-    if (page !== 1) {
-      fetchImage(filter, page, perPage)
-        .then(responseImages => {
-          setImages(prevImages => [...prevImages, ...responseImages.hits]);
-          setStatus('resolved');
-        })
-        .catch(error => {
-          setStatus('rejected');
-          console.error(error);
-        });
-    }
-  }, [filter, page]);
 
   if (status === 'idle') {
     return null;
